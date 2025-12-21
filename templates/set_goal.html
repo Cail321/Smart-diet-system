@@ -1,0 +1,48 @@
+<!-- templates/set_goal.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-page-wrapper">
+    <div class="auth-card">
+
+        <div class="goal-illustration-container">
+            <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f957.svg" alt="Healthy Goal Icon" class="goal-illustration">
+        </div>
+
+        <h2 class="goal-title">开启健康新目标</h2>
+        <p style="color: #666; margin-bottom: 30px; font-size: 0.95rem; line-height: 1.5;">
+            设定你的理想体重，营养助手将为你量身定制饮食建议，陪伴你每一餐。
+        </p>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="auth-form-group">
+                <label style="color: #4CAF50; font-weight: 600;">⚖️ 当前体重 (kg)</label>
+                {{ form.current_weight(class="auth-input", placeholder="例如: 65.5", style="background:#f9fbe7; border-color:#dce775;") }}
+                {% for error in form.current_weight.errors %}
+                <small style="color: #f44336;">{{ error }}</small>
+                {% endfor %}
+            </div>
+
+            <div class="auth-form-group">
+                <label style="color: #4CAF50; font-weight: 600;">🏁 目标体重 (kg)</label>
+                {{ form.target_weight(class="auth-input", placeholder="例如: 60.0", style="background:#f9fbe7; border-color:#dce775;") }}
+                {% for error in form.target_weight.errors %}
+                <small style="color: #f44336;">{{ error }}</small>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1.1rem; margin-top: 20px; background: linear-gradient(to right, #4CAF50, #009688); border: none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);">
+                确认
+            </button>
+        </form>
+
+        <div class="auth-footer" style="margin-top: 25px; border-top: 1px solid #f0f0f0; padding-top: 20px;">
+            <p style="font-size: 0.85rem; color: #999; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                <span style="font-size: 1.2rem;">🌿</span> 健康饮食，从今天开始
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="{{ url_for('index') }}">🥗 智能饮食系统</a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}" class="active">首页</a></li>
+            </ul>
+
+            <div class="nav-user-actions">
+                {% if current_user.is_authenticated %}
+                    <span class="welcome-text">欢迎，<strong>{{ current_user.username }}</strong></span>
+                    <a href="{{ url_for('logout') }}" class="btn-logout">退出登录</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn-login">登录</a>
+                    <a href="{{ url_for('register') }}" class="btn-register">立即注册</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-body">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    </body>
+</html>

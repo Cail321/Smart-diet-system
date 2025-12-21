@@ -1,0 +1,509 @@
+/* static/css/style.css */
+
+/* 1. 全局配置 */
+:root {
+    --primary-color: #4CAF50;    /* 鲜亮的绿色 */
+    --secondary-color: #2196F3;  /* 科技蓝 */
+    --bg-color: #f4f7f6;         /* 浅灰色背景 */
+    --card-bg: #ffffff;          /* 纯白卡片 */
+    --text-main: #333333;
+    --text-muted: #666666;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    color: var(--text-main);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* 2. 布局容器 */
+.container {
+    max-width: 1100px; /* 设定一个合适的宽度，既不拥挤也不空旷 */
+    margin: 40px auto; /* 上下留白 40px，左右自动居中 */
+    padding: 0 20px;   /* 移动端两侧留点缝隙 */
+}
+
+/* 3. 卡片式组件 (核心美化) */
+.card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+    border: none;
+}
+
+.card-title {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.25rem;
+    color: var(--text-main);
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+
+/* 4. 体重看板展示 */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    display: block;
+}
+
+/* 5. 按钮美化 */
+.btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary { background: var(--primary-color); color: white; }
+.btn-primary:hover { background: #45a049; transform: translateY(-1px); }
+
+.btn-secondary { background: var(--secondary-color); color: white; }
+.btn-secondary:hover { background: #1e88e5; }
+
+/* 6. 响应式图片 */
+.result-img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+/* static/css/style.css */
+
+/* 主布局：电脑端左右分栏，手机端自动垂直堆叠 */
+.main-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr; /* 固定左边栏宽度，右边自适应 */
+    gap: 30px;
+    align-items: start;
+    justify-content: center; /* 确保内容在容器内居中 */
+}
+
+@media (max-width: 850px) {
+    .main-layout {
+        grid-template-columns: 1fr; /* 屏幕小时改为单列 */
+        max-width: 500px;           /* 手机端限制一下卡片宽度 */
+        margin: 0 auto;
+    }
+}
+
+/* 进度条美化 */
+.progress-container {
+    background: #e9ecef;
+    border-radius: 20px;
+    height: 12px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    height: 100%;
+    transition: width 0.5s ease;
+}
+
+/* 识别区域的虚线框改为精致的卡片 */
+.upload-zone {
+    border: 2px dashed #cbd5e0;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+}
+
+.upload-zone:hover {
+    border-color: var(--secondary-color);
+    background: #f1f5f9;
+}
+/* 让上传区看起来像个按钮 */
+.upload-zone {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px dashed #cbd5e0;
+    background: #f8fafc;
+}
+
+.upload-zone:hover {
+    background: #f0f7ff; /* 淡淡的蓝色 */
+    border-color: #2196F3; /* 科技蓝 */
+    transform: translateY(-2px); /* 轻微浮动感 */
+}
+
+/* 选中文件后的反馈样式 */
+.upload-zone.has-file {
+    border-color: #4CAF50;
+    background: #f1f8e9;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+/* 预览图出现时的淡入动画 */
+#preview-container {
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* 之前提到过的反馈样式 */
+.upload-zone.has-file {
+    border-color: var(--primary-color) !important;
+    background: #f1f8e9 !important;
+}
+.tabs-header {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-weight: 600;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: 0.3s;
+}
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none; /* 默认隐藏所有内容 */
+}
+
+.tab-content.active {
+    display: block; /* 仅显示激活的选项卡 */
+}
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* static/css/style.css */
+
+/* 1. 导航栏基础容器 */
+.navbar {
+    background: #ffffff;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* 淡淡的投影 */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between; /* 左右分布 */
+    align-items: center;
+    padding: 0 20px;
+}
+
+/* 2. 左侧标题样式 */
+.nav-brand a {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+/* 3. 中间链接列表 */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: 0.3s;
+    font-size: 0.95rem;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--primary-color);
+}
+
+/* 4. 右侧用户操作区 */
+.nav-user-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.welcome-text {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* 按钮样式参考参考图中的绿色风格 */
+.btn-logout, .btn-login, .btn-register {
+    padding: 8px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-logout {
+    border: 1.5px solid #eee;
+    color: #888;
+}
+
+.btn-logout:hover {
+    background: #f5f5f5;
+    color: #444;
+}
+
+.btn-register {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-register:hover {
+    opacity: 0.9;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+}
+
+/* 调整页面主体边距，防止内容被导航栏遮挡 */
+.main-body {
+    padding-top: 20px;
+}
+/* 认证页面全屏背景 */
+.auth-page-wrapper {
+    min-height: calc(100vh - 70px); /* 减去导航栏高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 使用渐变色背景，增加层次感 */
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+    padding: 20px;
+}
+
+/* 悬浮小窗口样式 */
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.9); /* 半透明白色 */
+    backdrop-filter: blur(10px);         /* 毛玻璃效果 */
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); /* 深层柔和阴影 */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-align: center;
+}
+
+.auth-card h2 {
+    margin-bottom: 30px;
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+/* 输入框组美化 */
+.auth-form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.auth-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.auth-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    outline: none;
+}
+
+/* 底部切换链接 */
+.auth-footer {
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.auth-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+/* 错误信息微调 */
+.auth-form-group small {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8rem;
+}
+
+/* 给保存按钮增加一点渐变和阴影，使其看起来更有点击欲望 */
+.btn-primary {
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    transition: transform 0.2s;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+/* static/css/style.css */
+
+/* 1. 更新认证页面的背景，加入浅绿色渐变 */
+.auth-page-wrapper {
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    /* ✅ 新背景：从极浅的蓝色过渡到清新的浅绿色 */
+    background: linear-gradient(135deg, #f0f9ff 0%, #e8f5e9 100%);
+    /* 可选：加一个微妙的背景纹理，让它不那么单调 */
+    background-image: radial-gradient(rgba(76, 175, 80, 0.05) 2px, transparent 2px);
+    background-size: 30px 30px;
+}
+
+/* 2. 卡片样式微调 */
+.auth-card {
+    /* ...保留原有样式... */
+    /* ✅ 新增：顶部加一条绿色装饰线 */
+    border-top: 5px solid var(--primary-color);
+}
+
+/* 3. 新增：头部插画区域样式 */
+.goal-illustration-container {
+    text-align: center;
+    margin-bottom: 25px;
+    /* 给插图底部加一个柔和的光晕 */
+    position: relative;
+}
+
+.goal-illustration-container::after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 40px;
+    background: radial-gradient(ellipse at center, rgba(76, 175, 80, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+    z-index: 0;
+}
+
+.goal-illustration {
+    max-width: 180px; /* 控制图片大小 */
+    height: auto;
+    position: relative;
+    z-index: 1;
+    /* 增加一点轻微的浮动动画 */
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* 4. 标题颜色微调 */
+.goal-title {
+    color: #2e7d32; /* 深绿色标题 */
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+/* 1. 首页欢迎区 (Hero Section) */
+.hero-banner {
+    background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #c8e6c9;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.hero-text h2 {
+    color: #2e7d32;
+    margin: 0 0 10px 0;
+    font-size: 1.8rem;
+}
+
+.hero-text p {
+    color: #666;
+    margin: 0;
+}
+
+/* 2. 装饰性背景圆圈 (增加页面层次感) */
+.main-body {
+    position: relative;
+    overflow: hidden;
+}
+
+.main-body::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(76, 175, 80, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+    z-index: -1;
+}

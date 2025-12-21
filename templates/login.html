@@ -1,0 +1,32 @@
+<!-- templates/login.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-page-wrapper">
+    <div class="auth-card">
+        <h2>用户登录</h2>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="auth-form-group">
+                <label>用户名</label>
+                {{ form.username(class="auth-input", placeholder="请输入用户名") }}
+            </div>
+
+            <div class="auth-form-group">
+                <label>密码</label>
+                {{ form.password(class="auth-input", placeholder="请输入密码") }}
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem; margin-top: 10px;">
+                立即登录
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            还没有账号？ <a href="{{ url_for('register') }}">立即注册</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

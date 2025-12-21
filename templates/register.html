@@ -1,0 +1,42 @@
+<!-- templates/register.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-page-wrapper">
+    <div class="auth-card">
+        <h2>创建账号</h2>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="auth-form-group">
+                <label>用户名</label>
+                {{ form.username(class="auth-input", placeholder="3-20个字符") }}
+            </div>
+
+            <div class="auth-form-group">
+                <label>电子邮箱</label>
+                {{ form.email(class="auth-input", placeholder="example@mail.com") }}
+            </div>
+
+            <div class="auth-form-group">
+                <label>设置密码</label>
+                {{ form.password(class="auth-input", placeholder="至少6个字符") }}
+            </div>
+
+            <div class="auth-form-group">
+                <label>确认密码</label>
+                {{ form.password2(class="auth-input", placeholder="请再次输入密码") }}
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem; margin-top: 10px;">
+                注册并登录
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            已有账号？ <a href="{{ url_for('login') }}">去登录</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1 style="margin-bottom: 30px;">🍽️ 智能饮食系统</h1>
+
+        <div class="container">
+        <div class="hero-banner">
+            <div class="hero-text">
+                <h2>你好，{{ current_user.username }}！🌿</h2>
+                <p>今天也是充满活力的一天。准备好记录你的健康饮食了吗？</p>
+            </div>
+            <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f343.svg" style="width: 80px; opacity: 0.8;">
+        </div>
+
+        <div class="main-layout">
+            <div class="sidebar"></div>
+
+            <div class="main-content">
+
+            </div>
+        </div>
+    </div>
+    <div class="main-layout">
+
+        <div class="sidebar">
+            <div class="card">
+                <h3 class="card-title">⚖️ 健康数据</h3>
+                <div class="stats-grid">
+                    <div class="stat-item" style="background: #e3f2fd; border-radius: 8px; padding: 10px;">
+                        <span style="color: #1565c0; font-size: 0.85rem;">当前体重</span>
+                        <div class="stat-value" style="font-size: 1.5rem;">
+                            {{ current_user.current_weight if current_user.current_weight else '--' }} <small>kg</small>
+                        </div>
+                    </div>
+                    <div class="stat-item" style="background: #f1f8e9; border-radius: 8px; padding: 10px;">
+                        <span style="color: #2e7d32; font-size: 0.85rem;">目标体重</span>
+                        <div class="stat-value" style="font-size: 1.5rem;">
+                            {{ current_user.target_weight if current_user.target_weight else '--' }} <small>kg</small>
+                        </div>
+                    </div>
+                </div>
+
+                {% if current_user.current_weight and current_user.target_weight %}
+                <div style="margin-top: 15px;">
+                    {% set diff = (current_user.current_weight - current_user.target_weight)|abs %}
+                    <div class="progress-container" style="background: #eee; border-radius: 10px; height: 8px;">
+                        <div class="progress-bar" style="background: #4CAF50; height: 100%; width: 60%; border-radius: 10px;"></div>
+                    </div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                        距离目标还有 <strong>{{ "%.1f"|format(diff) }} kg</strong>
+                    </p>
+                </div>
+                {% endif %}
+
+                <a href="{{ url_for('set_goal') }}" class="btn" style="display: block; text-align: center; margin-top: 10px; background: #f8f9fa; color: #666; font-size: 0.8rem; border: 1px solid #ddd;">
+                    ⚙️ 修改目标
+                </a>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">📅 最近饮食记录</h3>
+                {% if recent_logs %}
+                    {% for log in recent_logs %}
+                    <div style="border-bottom: 1px solid #f0f0f0; padding: 10px 0;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <strong>{{ log.food_name }}</strong>
+                            <span style="font-size: 0.75rem; color: #999;">{{ log.timestamp.strftime('%H:%M') }}</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: #666; margin-top: 4px;">
+                            🔥 {{ log.calories }}kcal | 🥩 {{ log.protein }}g | 🍞 {{ log.carbs }}g
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="text-align: center; color: #ccc; padding: 20px 0;">暂无记录</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="main-content">
+
+            {% if result %}
+            <div class="card" style="border-left: 5px solid var(--primary-color);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 class="card-title" style="margin: 0; border: none; padding: 0;">✅ 识别结果：{{ result.name }}</h3>
+
+                    <button onclick="toggleCorrection()" class="btn" style="background: #f8f9fa; color: #007bff; font-size: 0.8rem; border: 1px solid #dee2e6; padding: 5px 12px;">
+                        ✏️ 名称不准？点此修改
+                    </button>
+                </div>
+
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    {% if filename %}
+                    <img src="{{ url_for('static', filename='uploads/' + filename) }}" class="result-img" style="width: 140px; height: 110px; object-fit: cover; border-radius: 8px;">
+                    {% endif %}
+
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; flex: 1; font-size: 0.95rem;">
+                        <div><span style="color: #666;">🔥 热量:</span> <strong>{{ result.nutrition.calories }}</strong> <small>kcal</small></div>
+                        <div><span style="color: #666;">🥩 蛋白质:</span> <strong>{{ result.nutrition.protein }}</strong> <small>g</small></div>
+                        <div><span style="color: #666;">🧈 脂肪:</span> <strong>{{ result.nutrition.fat }}</strong> <small>g</small></div>
+                        <div><span style="color: #666;">🍞 碳水:</span> <strong>{{ result.nutrition.carbs }}</strong> <small>g</small></div>
+                    </div>
+                </div>
+
+                <div id="correction-form" style="display: none; margin-top: 20px; padding-top: 15px; border-top: 1px dashed #eee;">
+                    <form action="{{ url_for('correct_food') }}" method="POST" style="display: flex; gap: 10px;">
+                        <input type="hidden" name="log_id" value="{{ recent_logs[0].id if recent_logs else '' }}">
+                        <input type="text" name="new_name" class="auth-input" placeholder="请输入正确的食物名称" required style="flex: 1; padding: 8px 12px;">
+                        <button type="submit" class="btn btn-primary" style="padding: 8px 20px; white-space: nowrap;">
+                            确认修正
+                        </button>
+                    </form>
+                    <p style="font-size: 0.75rem; color: #999; margin: 8px 0 0 5px;">* 修正后，AI 将重新通过云端数据库查询精准营养成分</p>
+                </div>
+            </div>
+
+            <script>
+            function toggleCorrection() {
+                const form = document.getElementById('correction-form');
+                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            }
+            </script>
+            {% endif %}
+
+    {% if instant_advice %}
+    <div class="card" style="background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%); border: 1px solid #bae1ff; animation: slideUp 0.5s ease;">
+        <h3 class="card-title" style="color: #0056b3; border-bottom-color: #bae1ff;">
+            <span>🥗 个性化推荐</span>
+        </h3>
+        <div style="display: flex; gap: 20px; align-items: flex-start;">
+            <div style="flex: 1;">
+                <p style="font-size: 1.05rem; line-height: 1.8; color: #34495e; margin: 0; white-space: pre-line;">
+                    {{ instant_advice }}
+                </p>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #bae1ff; display: flex; gap: 10px;">
+                    <span style="background: #e1f5fe; color: #01579b; padding: 2px 10px; border-radius: 12px; font-size: 0.8rem;">#个性化推荐</span>
+                    <span style="background: #e8f5e9; color: #2e7d32; padding: 2px 10px; border-radius: 12px; font-size: 0.8rem;">#健康目标控制</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+            <div class="card">
+                <div class="tabs-header">
+                    <button class="tab-btn active" onclick="switchTab('upload-tab', this)">📂 上传识别</button>
+                    <button class="tab-btn" onclick="switchTab('camera-tab', this)">📷 拍照识别</button>
+                </div>
+
+                <div id="upload-tab" class="tab-content active">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                            <div id="upload-placeholder">
+                                <span style="font-size: 3rem; color: #cbd5e0; display: block; margin-bottom: 10px;">☁️</span>
+                                <p id="file-name-text" style="color: #666; margin: 0;">点击此处或拖拽图片到这里</p>
+                            </div>
+                            <div id="preview-container" style="display: none; padding: 10px;">
+                                <img id="image-preview-element" src="" style="max-width: 100%; max-height: 250px; border-radius: 8px;">
+                            </div>
+                            <input type="file" name="file" id="file-input" accept="image/*" required style="display: none;" onchange="handleFileSelect(this)">
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button type="submit" class="btn btn-primary">🚀 开始识别食物</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="camera-tab" class="tab-content">
+                    <div class="upload-zone" style="min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <div id="camera-container" style="display: none; width: 100%;">
+                            <video id="video" width="100%" style="max-width: 400px; border-radius: 8px;" autoplay playsinline></video>
+                            <div style="margin-top: 15px;">
+                                <button id="capture-btn" class="btn btn-secondary">拍摄照片</button>
+                                <button id="close-camera-btn" class="btn" style="background:#f44336; color:white; margin-left:10px;">关闭</button>
+                            </div>
+                        </div>
+                        <button id="start-camera-btn" class="btn btn-secondary">启动摄像头</button>
+                        <div id="photo-preview" style="margin-top: 15px; display: none;">
+                            <img id="preview-img" style="width: 200px; border-radius: 8px; border: 1px solid #ddd;">
+                            <br>
+                            <button id="submit-photo-btn" class="btn btn-primary" style="margin-top: 10px;">确认提交识别</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            {% if error %}
+            <div class="card" style="border-left: 5px solid #f44336; background: #fff5f5;">
+                <p style="color: #f44336; margin: 0;">❌ {{ error }}</p>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
