@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 app.sqlite
 instance/
+.idea/
+*.iml

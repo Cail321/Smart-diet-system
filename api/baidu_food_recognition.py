@@ -12,13 +12,21 @@ def get_access_token():
     response = requests.post(url, params=params)
     return response.json().get("access_token")
 
-def recognize_food(image_path: str):
-    with open(image_path, 'rb') as f:
-        img_data = f.read()
-    img_b64 = base64.b64encode(img_data).decode('utf-8')
+def recognize_ingredient(image_path):
+    """调用百度 API 识别果蔬"""
+    with open(image_path, "rb") as f:
+        img_b64 = base64.b64encode(f.read()).decode("utf-8")
+    token = get_access_token()
+    url = f"https://aip.baidubce.com/rest/2.0/image-classify/v1/classify/ingredient?access_token={token}"
+    resp = requests.post(url, data={"image": img_b64}, headers={"content-type": "application/x-www-form-urlencoded"})
+    return resp.json()
 
-    access_token = get_access_token()
-    url = f"https://aip.baidubce.com/rest/2.0/image-classify/v2/food?access_token={access_token}"
-    headers = {'content-type': 'application/x-www-form-urlencoded'}
-    response = requests.post(url, data={'image': img_b64}, headers=headers)
-    return response.json()
+
+def recognize_dish(image_path):
+    """调用百度 API 识别菜品"""
+    with open(image_path, "rb") as f:
+        img_b64 = base64.b64encode(f.read()).decode("utf-8")
+    token = get_access_token()
+    url = f"https://aip.baidubce.com/rest/2.0/image-classify/v2/dish?access_token={token}"
+    resp = requests.post(url, data={"image": img_b64}, headers={"content-type": "application/x-www-form-urlencoded"})
+    return resp.json()

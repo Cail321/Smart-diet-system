@@ -15,13 +15,12 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length, NumberRange
 from dotenv import load_dotenv
 
 # 阿里 DashScope SDK
-import dashscope
 from dashscope import Generation
 
 # 本地模块导入
 from models import db, User, DietLog
 from nutrition.local_nutrition_db import get_nutrition_info
-
+from api.baidu_food_recognition import get_access_token, recognize_ingredient, recognize_dish
 # 加载环境变量
 load_dotenv()
 
@@ -95,35 +94,6 @@ class GoalForm(FlaskForm):
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-def get_access_token():
-    """获取百度 API Access Token"""
-    url = "https://aip.baidubce.com/oauth/2.0/token"
-    params = {"grant_type": "client_credentials", "client_id": API_KEY, "client_secret": SECRET_KEY}
-    resp = requests.post(url, params=params)
-    return resp.json().get("access_token")
-
-
-def recognize_ingredient(image_path):
-    """调用百度 API 识别果蔬"""
-    with open(image_path, "rb") as f:
-        img_b64 = base64.b64encode(f.read()).decode("utf-8")
-    token = get_access_token()
-    url = f"https://aip.baidubce.com/rest/2.0/image-classify/v1/classify/ingredient?access_token={token}"
-    resp = requests.post(url, data={"image": img_b64}, headers={"content-type": "application/x-www-form-urlencoded"})
-    return resp.json()
-
-
-def recognize_dish(image_path):
-    """调用百度 API 识别菜品"""
-    with open(image_path, "rb") as f:
-        img_b64 = base64.b64encode(f.read()).decode("utf-8")
-    token = get_access_token()
-    url = f"https://aip.baidubce.com/rest/2.0/image-classify/v2/dish?access_token={token}"
-    resp = requests.post(url, data={"image": img_b64}, headers={"content-type": "application/x-www-form-urlencoded"})
-    return resp.json()
-
 
 def get_nutrition_by_ai(food_name):
     """使用阿里 AI 查询食物的每 100g 营养成分"""
